@@ -13,7 +13,7 @@ def generate_schedule(months=6):
 
     names = read_diakens()
     random.shuffle(names)
-    print(names)
+    # print(names)
 
     current_month = datetime.now().month
     current_year = datetime.now().year
@@ -21,7 +21,7 @@ def generate_schedule(months=6):
     first_sunday = first_day + timedelta(days=(6 - first_day.weekday() + 7) % 7)
 
     sundays = []
-    for week in range(months*4):
+    for week in range(months * 4):
         sunday = first_sunday + timedelta(weeks=week)
 
         names_starting_index = week * 4
@@ -32,22 +32,21 @@ def generate_schedule(months=6):
             diaken = names[diaken_index].strip()
             sunday_diakens.append(diaken)
 
-
         random.shuffle(sunday_diakens)
 
         sunday_dict = {
-            'sondag_datum': sunday.strftime('%Y-%m-%d'),
-            'diaken_1': sunday_diakens[0],
-            'diaken_2': sunday_diakens[1],
-            'diaken_3': sunday_diakens[2],
-            'diaken_4': sunday_diakens[3],
+            "sondag_datum": sunday.date(),
+            "diaken_1": sunday_diakens[0],
+            "diaken_2": sunday_diakens[1],
+            "diaken_3": sunday_diakens[2],
+            "diaken_4": sunday_diakens[3],
         }
 
         sundays.append(sunday_dict)
 
     # Save the list of dicts to a CSV file
-    last_sunday = first_sunday + timedelta(weeks=months*4)
-    
+    last_sunday = first_sunday + timedelta(weeks=months * 4)
+
     output_csv_file_name = f"diakens_diensbeurte_{first_sunday.strftime('%Y-%m-%d')}_{last_sunday.strftime('%Y-%m-%d')}.csv"
     output_csv(sundays, output_csv_file_name)
 
@@ -57,9 +56,15 @@ def generate_schedule(months=6):
 
 def main():
     while True:
-        print("Welkom! Hierdie is 'n hulpmiddel om diaken diensbeurte uit te werk. Kies asseblief 'n opsie (1-3)")
-        print("1. (default) Die diakenlys word geshuffel en ingedeel per sondag. Ingedeelde diakens word weer geshuffel.")
-        print("2. Dieselfde as opsie 1, maar die hele diakenlys word elke silklus geshuffel.")
+        print(
+            "Welkom! Hierdie is 'n hulpmiddel om diaken diensbeurte uit te werk. Kies asseblief 'n opsie (1-3)"
+        )
+        print(
+            "1. (default) Die diakenlys word geshuffel en ingedeel per sondag. Ingedeelde diakens word weer geshuffel."
+        )
+        print(
+            "2. Dieselfde as opsie 1, maar die hele diakenlys word elke silklus geshuffel."
+        )
         print("3. Gaan uit.")
         first_input = input()
         strategy = 1
@@ -94,6 +99,7 @@ def main():
         else:
             print("Ongeldige opsie.")
             break
+
 
 # Call the main function to start the program
 main()
