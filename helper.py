@@ -1,15 +1,13 @@
 import csv
-from reportlab.pdfgen import canvas
-from datetime import datetime, timedelta
+from datetime import datetime
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (
     SimpleDocTemplate,
     Table,
     TableStyle,
     Paragraph,
-    Spacer,
 )
-from reportlab.platypus.flowables import BalancedColumns, KeepTogether
+from reportlab.platypus.flowables import BalancedColumns
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib import colors
@@ -43,23 +41,50 @@ months = [
 ]
 
 
-# date to 'Mei 2024'
 def format_date_month_year(date):
+    """
+    Args:
+        date (datetime.date): The date to be formatted.
+
+    Returns:
+        str: e.g. "Mei 2020"
+    """
     return f"{months[date.month - 1]} {date.year}"
 
 
-# date to '5 Mei'
 def format_date_day_month(date):
+    """
+    Args:
+        date (datetime.date): The date to be formatted.
+
+    Returns:
+        str: e.g. "14 Mei"
+    """
     return f"{date.day} {months[date.month - 1]}"
 
 
-# now datetime to '5 Mei 2024 15:00'
-def format_datetime_day_month_year_hour_minute(date):
+def format_datetime_day_month_year_hour_minute():
+    """
+    Current date and time
+
+    Returns:
+        str: e.g. "14 Mei 2020 15:00"
+    """
     dt = datetime.now()
     return f"{dt.day} {months[dt.month - 1]} {dt.year} {dt.hour}:{dt.minute}"
 
 
 def output_csv(sundays, file_name):
+    """
+    Write a list of dictionaries to a CSV file.
+
+    Args:
+        sundays (list): A list of dictionaries representing the data to be written to the CSV file.
+        file_name (str): The name of the CSV file to be created.
+
+    Returns:
+        None
+    """
     with open(f"data/{file_name}", "w", newline="") as file:
         fieldnames = [
             "sondag_datum",
@@ -75,13 +100,14 @@ def output_csv(sundays, file_name):
 
 def output_pdf(sundays, file_name):
     """
+    Write a list of dictionaries to a PDF file.
+
     Args:
         sundays (list): list of dicts { sondag_datum: date, diaken_1: str, diaken_2: str, diaken_3: str, diaken_4: str }
         file_name (str): file name for the pdf file
     """
 
-    # Create a list of lists for the tables
-    # data = [
+    # table_data = [
     #     ["MAART 2024", "", ""],
     #     ["3 Maart", "1", "Nicol van Wijk"],
     #     ["", "2", "Pierre du Toit"],
@@ -129,71 +155,41 @@ def output_pdf(sundays, file_name):
     doc = SimpleDocTemplate(
         f"data/{file_name}",
         pagesize=A4,
-        leftMargin=50,
-        rightMargin=50,
-        topMargin=50,
+        leftMargin=10,
+        rightMargin=10,
+        topMargin=10,
         bottomMargin=0,
         title="Diaken Diensbeurte",
         pageCompression=None,
         lang="af",
     )
+
+    # Define styles
     styles = getSampleStyleSheet()
 
     styles.add(
         ParagraphStyle(
             name="Heading1_center",
             parent=styles["Heading1"],
-            # fontName="Helvetica",
-            # wordWrap="LTR",
             alignment=TA_CENTER,
-            # fontSize=12,
-            # leading=13,
-            # textColor=colors.black,
-            # borderPadding=0,
-            # leftIndent=0,
-            # rightIndent=0,
-            # spaceAfter=0,
-            # spaceBefore=0,
-            # splitLongWords=True,
-            # spaceShrinkage=0.05,
         )
     )
     styles.add(
         ParagraphStyle(
             name="Normal_center",
             parent=styles["Normal"],
-            # fontName="Helvetica",
-            # wordWrap="LTR",
             alignment=TA_CENTER,
-            # fontSize=12,
-            # leading=13,
-            # textColor=colors.black,
-            # borderPadding=0,
-            # leftIndent=0,
-            # rightIndent=0,
-            # spaceAfter=0,
             spaceBefore=20,
-            # splitLongWords=True,
-            # spaceShrinkage=0.05,
         )
     )
     styles.add(
         ParagraphStyle(
             name="Info_center",
             parent=styles["Normal"],
-            # fontName="Helvetica",
-            # wordWrap="LTR",
             alignment=TA_CENTER,
             fontSize=6,
-            # leading=13,
             textColor=colors.lightgrey,
-            # borderPadding=0,
-            # leftIndent=0,
-            # rightIndent=0,
-            # spaceAfter=0,
-            spaceBefore=50,
-            # splitLongWords=True,
-            # spaceShrinkage=0.05,
+            spaceBefore=20,
         )
     )
 
@@ -207,7 +203,7 @@ def output_pdf(sundays, file_name):
             ("BOTTOMPADDING", (0, 0), (-1, 0), 6),
             ("BACKGROUND", (0, 1), (-1, -1), colors.white),
             ("BOX", (0, 0), (-1, -1), 1, colors.black),
-            ("LINEABOVE", (0, 1), (-1, 1), 1, colors.black),
+            ("LINEBELOW", (0, 0), (-1, 0), 1, colors.black),
             ("LINEABOVE", (0, 5), (-1, 5), 1, colors.black),
             ("LINEABOVE", (0, 9), (-1, 9), 1, colors.black),
             ("LINEABOVE", (0, 13), (-1, 13), 1, colors.black),
@@ -223,17 +219,16 @@ def output_pdf(sundays, file_name):
     elements.append(Paragraph("DIENSBEURTE VIR DIAKENS", styles["Heading1_center"]))
 
     tables = []
-    # Create tables and specify its style
     for data in table_data:
-        table = Table(data=data, spaceAfter=20, style=table_style, rowHeights=18)
-        tables.append(KeepTogether(table))
-
-    # column_flowables = []
-    # for index, table in enumerate(tables):
-    #     column_flowables.append(table)
-
-    #     # if index % 2 == 0:
-    #     #     column_flowables.append(Spacer(1, 10))
+        table = Table(
+            data=data,
+            spaceAfter=20,
+            style=table_style,
+            repeatRows=1,
+            rowSplitRange=1,
+            colWidths=[80, 20, 150],
+        )
+        tables.append(table)
 
     elements.append(
         BalancedColumns(
@@ -243,7 +238,7 @@ def output_pdf(sundays, file_name):
             spaceBefore=0,
             spaceAfter=0,
             showBoundary=None,  # optional boundary showing
-            leftPadding=None,  # these override the created frame
+            leftPadding=20,  # these override the created frame
             rightPadding=None,  # paddings if specified else the 50
             topPadding=None,  # default frame paddings
             bottomPadding=None,  # are used
