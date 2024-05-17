@@ -1,30 +1,33 @@
-import random
+import os
 import csv
+import random
+from pdf import Pdf
 from datetime import datetime, timedelta
 from helpers import (
     Format,
     Strategy,
-    SundaySchedule,
+    SundaySchedule, # not implemented
     format_date_file_name,
+    INPUT_FILE,
+    OUTPUT_FILE_PREFIX,
+    OUTPUT_DIRECTORY
 )
-from datetime import datetime
-from pdf import Pdf
-
+from dateutil.relativedelta import relativedelta, SU
+import math
 
 class Scheduler:
-    def __init__(self, months=6, strategy=Strategy.RANDOM, names_file="diakens.txt"):
+    def __init__(self, months=6, strategy=Strategy.RANDOM):
         self.months = months
         self.strategy = strategy
-        self.names_file = names_file
 
     def read_names(self):
-        with open(self.names_file, "r") as file:
+        with open(INPUT_FILE, "r") as file:
             lines = file.readlines()
 
         return lines
 
     def output_csv(self, sundays, file_name):
-        with open(f"data/{file_name}", "w", newline="") as file:
+        with open(f"{OUTPUT_DIRECTORY}/{file_name}", "w", newline="") as file:
             fieldnames = [
                 "sondag_datum",
                 "diaken_1",
@@ -42,7 +45,7 @@ class Scheduler:
 
     @staticmethod
     def output_file_name(first_sunday, last_sunday, format):
-        return f"diaken_diensbeurte_{format_date_file_name(first_sunday)}_tot_{format_date_file_name(last_sunday)}.{format.value}"
+        return f"{OUTPUT_FILE_PREFIX}_{format_date_file_name(first_sunday)}_tot_{format_date_file_name(last_sunday)}.{format.value}"
 
     def generate(self):
         names = self.read_names()
@@ -55,10 +58,12 @@ class Scheduler:
 
         first_day = datetime(current_year, current_month, 1)
         first_sunday = first_day + timedelta(days=(6 - first_day.weekday() + 7) % 7)
-        last_sunday = first_sunday + timedelta(weeks=self.months * 4)
-
+        last_sunday = first_day + relativedelta(months=self.months, weekday=SU(-1))
+        end_date = first_day + relativedelta(months=self.months)
+        weeks = math.ceil((end_date - first_sunday).days / 7)
+        
         sundays = []
-        for week in range(self.months * 4):
+        for week in range(weeks):
             sunday_datetime = first_sunday + timedelta(weeks=week)
             names_starting_index = week * 4
 
@@ -77,6 +82,9 @@ class Scheduler:
                 "diaken_4": sunday_diakens[3],
             }
             sundays.append(sunday_schedule)
+
+        if not os.path.exists(OUTPUT_DIRECTORY):
+            os.makedirs(OUTPUT_DIRECTORY)
 
         self.output_csv(
             sundays, self.output_file_name(first_sunday, last_sunday, Format.CSV)

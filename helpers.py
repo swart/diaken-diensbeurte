@@ -1,8 +1,11 @@
-from dataclasses import dataclass
-from datetime import datetime
 from enum import Enum
+from datetime import datetime
+from dataclasses import dataclass
 
-
+INPUT_FILE = "diakens.txt"
+OUTPUT_FILE_PREFIX = "diaken_diensbeurte"
+OUTPUT_DIRECTORY = "data"
+PAGE_HEADING = "DIENSBEURTE VIR DIAKENS"
 MONTHS = [
     "Januarie",
     "Februarie",

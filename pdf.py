@@ -1,24 +1,23 @@
-from reportlab.platypus import SimpleDocTemplate
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import SimpleDocTemplate
+from reportlab.platypus.flowables import BalancedColumns
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.platypus import (
     SimpleDocTemplate,
     Table,
     TableStyle,
     Paragraph,
 )
-from reportlab.platypus.flowables import BalancedColumns
-from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib import colors
 
 from helpers import (
     format_date_day_month,
     format_date_month_year,
     format_datetime_day_month_year_hour_minute,
+    PAGE_HEADING,
+    OUTPUT_DIRECTORY
 )
-
-
-PAGE_HEADING = "DIENSBEURTE VIR DIAKENS"
 
 
 class Pdf(SimpleDocTemplate):
@@ -28,7 +27,7 @@ class Pdf(SimpleDocTemplate):
 
     def __init__(self, filename, sundays):
         super().__init__(
-            f"data/{filename}",
+            f"{OUTPUT_DIRECTORY}/{filename}",
             pagesize=A4,
             leftMargin=10,
             rightMargin=10,
