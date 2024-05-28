@@ -10,8 +10,8 @@ def main():
         "-m",
         "--maande",
         type=int,
-        default=6,
-        help="Hoeveelheid maande om die diensbeurte uit te werk. Verstekwaarde is 6.",
+        default=4,
+        help="Hoeveelheid maande om die diensbeurte uit te werk. Verstekwaarde is 4.",
     )
     parser.add_argument(
         "-s",
@@ -21,9 +21,19 @@ def main():
         default=1,
         help="Strategie vir indeling. 1: Shuffle en deel diakens in elke sondag. 2: Shuffle die hele diakenlys elke siklus.",
     )
+    parser.add_argument(
+        "-hm",
+        "--huidige-maand",
+        action="store_true",
+        help="Begin met die huidige maand in plaas van die volgende maand.",
+    )
     args = parser.parse_args()
 
-    scheduler = Scheduler(months=args.maande, strategy=Strategy(args.strategie))
+    scheduler = Scheduler(
+        months=args.maande,
+        strategy=Strategy(args.strategie),
+        include_current_month=args.huidige_maand
+    )
     scheduler.generate()
 
 

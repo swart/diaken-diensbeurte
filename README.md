@@ -22,13 +22,14 @@ pip install -r requirements.txt
 ```
 
 ## Hoe om te gebruik?
-Doen gewoon `python main.py`. Dit sal diaken diensbeurte vir die volgende 6 maande uitwerk.
+Doen gewoon `python main.py`. Dit sal diaken diensbeurte vir die volgende 4 maande uitwerk.
 
 Daar is opsies beskikbaar wat u sal toelaat om die hoeveelheid maande en indelingstrategie te verander. Vir meer inligting sien `python main.py --help`.
 
 'n Opsomming van die opsies:
 - -m, --maande: Hoeveelheid maande om die diensbeurte uit te werk.
-    - Verstekwaarde is 6.
+    - Verstekwaarde is 4.
+- -hm, --huidige-maand: Begin met die huidige maand in plaas van die volgende maand.
 - -s, --strategie: Strategie vir indeling.
     - 1: Shuffle en deel diakens in elke sondag.
     - 2: Shuffle die hele diakenlys elke siklus.

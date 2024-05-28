@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from helpers import (
     Format,
     Strategy,
-    SundaySchedule, # not implemented
+    # SundaySchedule, # not implemented
     format_date_file_name,
     INPUT_FILE,
     OUTPUT_FILE_PREFIX,
@@ -17,9 +17,10 @@ from dateutil.relativedelta import relativedelta, SU
 import math
 
 class Scheduler:
-    def __init__(self, months=6, strategy=Strategy.RANDOM):
+    def __init__(self, months=4, strategy=Strategy.RANDOM, include_current_month=False):
         self.months = months
         self.strategy = strategy
+        self.include_current_month = include_current_month
 
     def read_names(self):
         with open(INPUT_FILE, "r") as file:
@@ -111,7 +112,7 @@ class Scheduler:
     def generate(self):
         names = []
 
-        current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1
+        current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1 if self.include_current_month else datetime.now().month + 1
         current_year = datetime.now().year
 
         first_day = datetime(current_year, current_month, 1)
