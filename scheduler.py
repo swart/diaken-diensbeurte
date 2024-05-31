@@ -11,6 +11,7 @@ from helpers import (
     INPUT_FILE,
     OUTPUT_FILE_PREFIX,
     OUTPUT_DIRECTORY,
+    SHIFT_SIZE,
     SHIFT_SIZE
 )
 from dateutil.relativedelta import relativedelta, SU
@@ -112,7 +113,16 @@ class Scheduler:
     def generate(self):
         names = []
 
+<<<<<<< HEAD
         current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1 if self.include_current_month else datetime.now().month + 1
+=======
+        return names
+
+    def generate(self):
+        names = []
+
+        current_month = datetime.now().month
+>>>>>>> f331e52 (Changing scheduler to accommodate groups of names in the to-be-assigned list of diakens by assigning all diakens of a group to the same shift)
         current_year = datetime.now().year
 
         first_day = datetime(current_year, current_month, 1)
