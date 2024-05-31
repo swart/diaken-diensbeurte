@@ -6,7 +6,7 @@ Bastiaan Jansen
 Hendrik Pretorius
 Egbert de Vries
 Jacobus Erasmus
-Wouter de Boer
+Wouter de Boer,Koos Prinsloo
 Stephanus van Wyk
 Leendert van den Berg
 Frederik Kruger
