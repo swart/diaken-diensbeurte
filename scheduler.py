@@ -121,7 +121,7 @@ class Scheduler:
     def generate(self):
         names = []
 
-        current_month = datetime.now().month
+        current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1
 >>>>>>> f331e52 (Changing scheduler to accommodate groups of names in the to-be-assigned list of diakens by assigning all diakens of a group to the same shift)
         current_year = datetime.now().year
 
