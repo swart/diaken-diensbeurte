@@ -111,7 +111,7 @@ class Scheduler:
     def generate(self):
         names = []
 
-        current_month = datetime.now().month
+        current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1
         current_year = datetime.now().year
 
         first_day = datetime(current_year, current_month, 1)
