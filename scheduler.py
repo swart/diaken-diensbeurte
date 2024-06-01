@@ -73,11 +73,11 @@ class Scheduler:
             # First add grouped names
             for name in entry:
                 if len(entry) > 1:
-                    temp[name] = to_be_assigned_list[i]
+                    temp[name.rstrip()] = to_be_assigned_list[i]
             # Now add individuals
             for name in entry:
                 if len(entry) == 1:
-                    temp[name] = to_be_assigned_list[i]
+                    temp[name.rstrip()] = to_be_assigned_list[i]
 
         # Raise exception if not enough for a shift
         if len(temp) < SHIFT_SIZE:
