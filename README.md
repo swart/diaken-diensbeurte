@@ -31,8 +31,8 @@ Daar is opsies beskikbaar wat u sal toelaat om die hoeveelheid maande en indelin
     - Verstekwaarde is 4.
 - -hm, --huidige-maand: Begin met die huidige maand in plaas van die volgende maand.
 - -s, --strategie: Strategie vir indeling.
-    - 1: Shuffle en deel diakens in elke sondag.
-    - 2: Shuffle die hele diakenlys elke siklus.
+    - 1: Shuffle en deel diakens in elke siklus.
+    - 2: Shuffle die hele diakenlys een keer.
 
 ## Hoe werk die indeling?
 Die hele diakenlys word eers geshuffel (volgens die [Fisher-Yates algoritme](https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle)), daarna word die name sekwensieel in groepe van 4 per Sondag ingedeel. Elke Sondag se 4 name word weer geshuffel.
