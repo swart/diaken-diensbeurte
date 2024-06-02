@@ -96,22 +96,25 @@ class Scheduler:
 
         return on_duty_list
 
-    def get_names(self):
+    def get_names(self, shuffle):
         """
-        Return read names in order determined by strategy
+        Return read names, optionally shuffled
+
+        Args:
+            shuffle : Place read names in random order
 
         Return:
             names: list of strings
         """
         names = self.read_names()
 
-        if self.strategy != Strategy.ORDERED:
+        if shuffle == True:
             random.shuffle(names)
 
         return names
 
     def generate(self):
-        names = []
+        names = self.get_names((self.strategy != Strategy.ORDERED))
 
         current_month = datetime.now().month if self.include_current_month else datetime.now().month + 1
         current_year = datetime.now().year
@@ -128,7 +131,7 @@ class Scheduler:
 
             # If not enough unassigned names add some
             if len(names) < SHIFT_SIZE:
-                names = names + self.get_names()
+                names = names + self.get_names((self.strategy == Strategy.RANDOM_CYCLE))
 
             sunday_shift = self.reserve_for_duty(names)
 

@@ -27,7 +27,7 @@ class NotEnoughForShiftError(Exception):
 
 class Strategy(Enum):
     RANDOM = 1
-    RANDOM_CYCLE = 2  # Not implemented
+    RANDOM_CYCLE = 2
     ORDERED = 3
 
 
