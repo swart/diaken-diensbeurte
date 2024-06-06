@@ -19,7 +19,7 @@ def main():
         type=int,
         choices=[1, 2],
         default=1,
-        help="Strategie vir indeling. 1: Shuffle en deel diakens in elke sondag. 2: Shuffle die hele diakenlys elke siklus.",
+        help="Strategie vir indeling. 1: Shuffle en deel diakens in elke siklus. 2: Shuffle die hele diakenlys een keer.",
     )
     parser.add_argument(
         "-hm",

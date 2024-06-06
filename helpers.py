@@ -6,6 +6,7 @@ INPUT_FILE = "diakens.txt"
 OUTPUT_FILE_PREFIX = "diaken_diensbeurte"
 OUTPUT_DIRECTORY = "data"
 PAGE_HEADING = "DIENSBEURTE VIR DIAKENS"
+SHIFT_SIZE = 4
 MONTHS = [
     "Januarie",
     "Februarie",
@@ -21,10 +22,12 @@ MONTHS = [
     "Desember",
 ]
 
+class NotEnoughForShiftError(Exception):
+    pass
 
 class Strategy(Enum):
     RANDOM = 1
-    RANDOM_CYCLE = 2  # Not implemented
+    RANDOM_CYCLE = 2
     ORDERED = 3
 
 
