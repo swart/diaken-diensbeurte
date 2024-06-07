@@ -19,7 +19,7 @@ def main():
         type=int,
         choices=[1, 2],
         default=1,
-        help="Strategie vir indeling. 1: Shuffle en deel diakens in elke siklus. 2: Shuffle die hele diakenlys een keer.",
+        help="Strategie vir indeling. 1: Lukraak. 2: Gebruik huidige volgorde. Verstekwaarde is 1.",
     )
     parser.add_argument(
         "-hm",
@@ -32,7 +32,7 @@ def main():
     scheduler = Scheduler(
         months=args.maande,
         strategy=Strategy(args.strategie),
-        include_current_month=args.huidige_maand
+        include_current_month=args.huidige_maand,
     )
     scheduler.generate()
 

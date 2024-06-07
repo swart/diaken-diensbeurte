@@ -2,6 +2,7 @@ from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
 
+
 INPUT_FILE = "diakens.txt"
 OUTPUT_FILE_PREFIX = "diaken_diensbeurte"
 OUTPUT_DIRECTORY = "data"
@@ -22,17 +23,14 @@ MONTHS = [
     "Desember",
 ]
 
-class NotEnoughForShiftError(Exception):
-    pass
 
 class Strategy(Enum):
     RANDOM = 1
-    RANDOM_CYCLE = 2
-    ORDERED = 3
+    ORDERED = 2
 
 
 class Format(Enum):
-    CSV = "CSV"
+    CSV = "csv"
     PDF = "pdf"
 
 
