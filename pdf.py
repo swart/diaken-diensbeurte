@@ -12,6 +12,7 @@ from reportlab.platypus import (
 )
 
 from helpers import (
+    months_difference,
     format_date_day_month,
     format_date_month_year,
     format_datetime_day_month_year_hour_minute,
@@ -108,7 +109,7 @@ class Pdf(SimpleDocTemplate):
         first_sunday = self.sundays[0]["sondag_datum"]
 
         for index, sunday in enumerate(self.sundays):
-            table_data_index = sunday["sondag_datum"].month - first_sunday.month
+            table_data_index = months_difference(first_sunday, sunday["sondag_datum"])
 
             is_new_month = True
             if index > 0:
@@ -117,6 +118,7 @@ class Pdf(SimpleDocTemplate):
                     != self.sundays[index - 1]["sondag_datum"].month
                 )
 
+            # Insert row header with month and year
             if is_new_month:
                 table_data.append([])
                 table_data[table_data_index].append(

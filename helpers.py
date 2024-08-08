@@ -92,3 +92,18 @@ def format_datetime_day_month_year_hour_minute():
     """
     dt = datetime.now()
     return f"{dt.day} {MONTHS[dt.month - 1]} {dt.year} {dt.hour}:{dt.minute}"
+
+
+def months_difference(start_date, end_date):
+    """
+    Args:
+        start_date (datetime):
+        end_date (datetime):
+
+    Returns:
+        int: number of months
+    """
+    years = end_date.year - start_date.year
+    months = end_date.month - start_date.month
+    total_months = years * 12 + months
+    return total_months
