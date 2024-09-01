@@ -1,9 +1,12 @@
 from enum import Enum
 from datetime import datetime
 from dataclasses import dataclass
+import random
 
 
 INPUT_FILE = "diakens.txt"
+CONTEXT_FILE = "konteks.txt"
+CONTEXT_SIZE = 13
 OUTPUT_FILE_PREFIX = "diaken_diensbeurte"
 OUTPUT_DIRECTORY = "data"
 PAGE_HEADING = "DIENSBEURTE VIR DIAKENS"
@@ -32,15 +35,6 @@ class Strategy(Enum):
 class Format(Enum):
     CSV = "csv"
     PDF = "pdf"
-
-
-@dataclass
-class SundaySchedule:
-    sondag_datum: datetime
-    diaken_1: str
-    diaken_2: str
-    diaken_3: str
-    diaken_4: str
 
 
 def format_date_file_name(date):
@@ -107,3 +101,8 @@ def months_difference(start_date, end_date):
     months = end_date.month - start_date.month
     total_months = years * 12 + months
     return total_months
+
+
+def insert_randomly(lst, item):
+    index = random.randint(0, len(lst))
+    lst.insert(index, item)

@@ -1,33 +1,42 @@
 import os
 import csv
+import math
 import random
 from pdf import Pdf
+from collections import deque
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta, SU
+
 from helpers import (
-    Format,
-    Strategy,
-    # SundaySchedule, # not implemented
-    format_date_file_name,
     INPUT_FILE,
+    CONTEXT_FILE,
     OUTPUT_FILE_PREFIX,
     OUTPUT_DIRECTORY,
     SHIFT_SIZE,
+    CONTEXT_SIZE,
+    Format,
+    Strategy,
+    format_date_file_name,
+    insert_randomly,
 )
-from dateutil.relativedelta import relativedelta, SU
-import math
 
 
 class Scheduler:
     def __init__(self, months=4, strategy=Strategy.RANDOM, include_current_month=False):
-        self.names = []
+        self.context = deque(
+            self._load_names_from_file(CONTEXT_FILE), maxlen=CONTEXT_SIZE
+        )
+        self.names = self._load_names_from_file(INPUT_FILE)
         self.available_names = []
         self.months = months
         self.strategy = strategy
         self.include_current_month = include_current_month
 
-    def read_names(self):
-        with open(INPUT_FILE, "r") as file:
-            self.names = file.read().splitlines()
+    def _load_names_from_file(self, file_path):
+        if not os.path.exists(file_path):
+            return []
+        with open(file_path, "r") as file:
+            return file.read().splitlines()
 
     def output_csv(self, sundays, file_name):
         with open(f"{OUTPUT_DIRECTORY}/{file_name}", "w", newline="") as file:
@@ -50,15 +59,15 @@ class Scheduler:
     def output_file_name(first_sunday, last_sunday, format):
         return f"{OUTPUT_FILE_PREFIX}_{format_date_file_name(first_sunday)}_tot_{format_date_file_name(last_sunday)}.{format.value}"
 
-    def reserve_for_duty(self):
+    def _assign_names_to_shift(self):
         """
-        Return the names to be assigned to next shift and
-        remove them from the to-be-assigned list of names.
+        Return the names to be assigned to the next shift and
+        remove them from the list of available names.
 
         Returns:
-            on_duty_list : list of strings
+            swift_list : list of strings
         """
-        # Make sure theres enough names to assign (available_names)
+        # Make sure there are enough names to assign (available_names)
         if len(self.available_names) < SHIFT_SIZE:
             names = self.names.copy()
 
@@ -68,24 +77,22 @@ class Scheduler:
             self.available_names.extend(names)
 
         # Assign four names to the next shift
-        on_duty_list = []
-        for i in range(SHIFT_SIZE):
+        swift_list = []
+        while len(swift_list) < SHIFT_SIZE:
             item = self.available_names.pop(0)
+            names = [name.rstrip() for name in item.split(",")]
 
-            # Groups of names that should be assigned together
-            on_duty_list.extend(item.split(","))
+            # Check if names are in context
+            if any(name in self.context for name in names):
+                self.available_names.append(item)
+                # insert_randomly(self.available_names, item)
+            else:
+                swift_list.extend(names)
+                self.context.extend(names)
 
-            if len(on_duty_list) == SHIFT_SIZE:
-                break
-
-        for name in on_duty_list:
-            name = name.rstrip()
-
-        return on_duty_list
+        return swift_list
 
     def generate(self):
-        self.read_names()
-
         current_month = (
             datetime.now().month
             if self.include_current_month
@@ -102,7 +109,7 @@ class Scheduler:
         sundays = []
         for week in range(weeks):
             sunday_datetime = first_sunday + timedelta(weeks=week)
-            sunday_shift = self.reserve_for_duty()
+            sunday_shift = self._assign_names_to_shift()
 
             random.shuffle(sunday_shift)
 
